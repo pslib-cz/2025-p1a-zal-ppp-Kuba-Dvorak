@@ -1,0 +1,30 @@
+{
+    "name": "pxt-vanGogh-v.3",
+    "description": "",
+    "dependencies": {
+        "core": "*",
+        "radio": "*",
+        "microphone": "*",
+        "pxt-magicbit-pca9685": "github:microbit-cz/pxt-magicbit-pca9685#1.0.0"
+    },
+    "files": [
+        "main.ts",
+        "README.md",
+        "types.ts",
+        "robot.ts",
+        "functions.ts",
+        "parser.ts"
+    ],
+    "testFiles": [
+        "test.ts"
+    ],
+    "targetVersions": {
+        "target": "8.0.22",
+        "targetId": "microbit"
+    },
+    "supportedTargets": [
+        "microbit"
+    ],
+    "preferredEditor": "tsprj",
+    "languageRestriction": "javascript-only"
+}

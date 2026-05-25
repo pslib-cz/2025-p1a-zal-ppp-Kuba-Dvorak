@@ -55,3 +55,7 @@ Robot nemá žádnou zpětnou vazbu od kol
 -   `ServoHelper.createServo()` - vytvoření objektu serva
 -   `Servo.down()`              - vysunutí serva nahoru
 -   `Servo.up()`                - zasunutí serva dolu
+
+# Vypůjčené věci
+-  Microbit (sériové číslo: 148111)
+-  Van Gogh extension - kompletní sada: krokové motory, extension board, rám, servo

@@ -136,15 +136,15 @@ class Robot {
 
         else if (newSet === InstructionSet.antiClockWise || newSet === InstructionSet.clockWise) {
             // I a J paramerty, jsou vzdy relativni
-            newParameters[ResponsiveChars.j] += this.information.position.x
-            newParameters[ResponsiveChars.i] += this.information.position.y
+            newParameters[ResponsiveChars.i] += this.information.position.x
+            newParameters[ResponsiveChars.j] += this.information.position.y
             this.solveArc(newParameters, newSet)
         }
     }
 
     solveArc(newParameters: { [name: string]: number }, instrSet: InstructionSet): void {
         const newPos: Position2D = { x: newParameters[ResponsiveChars.x], y: newParameters[ResponsiveChars.y] }
-        const centrePos: Position2D = { x: newParameters[ResponsiveChars.j], y: newParameters[ResponsiveChars.i] }
+        const centrePos: Position2D = { x: newParameters[ResponsiveChars.i], y: newParameters[ResponsiveChars.j] }
         const distanceNow: number = absoluteDistance(this.information.position, centrePos)
         const distanceNew: number = absoluteDistance(newPos, centrePos)
         const difference: number = Math.abs(distanceNow - distanceNew)

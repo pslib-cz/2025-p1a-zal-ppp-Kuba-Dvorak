@@ -5,7 +5,8 @@
         "core": "*",
         "radio": "*",
         "microphone": "*",
-        "pxt-magicbit-pca9685": "github:microbit-cz/pxt-magicbit-pca9685#1.0.0"
+        "pxt-magicbit-pca9685": "github:microbit-cz/pxt-magicbit-pca9685#1.0.0",
+        "microbit-pxt-flashstorage": "github:bsiever/microbit-pxt-flashstorage#v0.1.4"
     },
     "files": [
         "main.ts",

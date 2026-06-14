@@ -37,7 +37,6 @@ class Parser {
             if (this.currentChar >= this.inputString.length) {
                 console.log(`Big trouble, last command, which was supposed to get a number, didn´t find one.`)
                 break
-                return 0
             }
         }
 
@@ -49,6 +48,7 @@ class Parser {
 
             if (curChar === "." && !float) {
                 float = true
+                continue
             }
 
             if (float) {

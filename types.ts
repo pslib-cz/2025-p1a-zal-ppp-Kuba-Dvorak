@@ -2,8 +2,6 @@
 
 type RobotParamets = {
     trackWidth: number
-    wheelRadius: number
-    angelarSpeed: number
     periodTime: number
     linearSpeed: number
     arcToleration: number

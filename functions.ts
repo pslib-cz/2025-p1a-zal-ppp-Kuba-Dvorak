@@ -57,25 +57,56 @@ function dotProduct(vecA: Vector2D, vecB: Vector2D): number {
 
 
 function calibrate(): RobotParamets {
+    control.runInBackground(() => music.playTone(200, 100))
+    basic.showString("?")
     console.log("Setting up the parameters:")
     console.log("   If you want to use the premessured parameters press the logo button")
-    console.log("   If you want to calibrate press the A button")
+    console.log("   If you want to calibrate and overwrite flash press the A button")
+    console.log("   If you want to load setting from flash press the B button")
+
     while (true) {
         if (input.buttonIsPressed(Button.A)) {
+            basic.showIcon(IconNames.Yes)
             break
         }
 
+        if (input.buttonIsPressed(Button.B)) {
+            basic.showIcon(IconNames.Pitchfork)
+            let trackWidth: any = flashstorage.getOrDefault("trackWidth", "nic");
+            let linearSpeed: any = flashstorage.getOrDefault("linearSpeed", "nic");
+            if (linearSpeed == "nic" || trackWidth == "nic") {
+                console.log("No calibration was found on disk")
+                console.log("please proceade with calibration...")
+                break
+            }
+            else {
+                console.log(`Linear speed has been calibrated to: ${linearSpeed}.`)
+                console.log(`Track width has been calibrated to: ${trackWidth}.`)
+                basic.clearScreen()
+                return {
+                    trackWidth: parseFloat(trackWidth),
+                    periodTime: 250,
+                    arcToleration: 1,
+                    linearSpeed: parseFloat(linearSpeed)
+                }
+            }
+        }
+
         if (input.logoIsPressed()) {
+            console.log("Default setting chosen")
+            basic.showIcon(IconNames.No)
             return {
                 trackWidth: 71,
-                wheelRadius: 32,
-                angelarSpeed: (Math.PI / 5000),
                 periodTime: 250,
                 arcToleration: 1,
-                linearSpeed: ((Math.PI / 5000) * 32)
+                linearSpeed: ((Math.PI / 5000) * 35)
             }
         }
     }
+
+    control.runInBackground(() => music.playTone(400, 100))
+    basic.pause(1000)
+    basic.clearScreen()
     console.log("This is the calibration.")
     console.log("First discipline will be driving 1 meter,")
     console.log("You shall press the A button to start the jorney,")
@@ -89,6 +120,8 @@ function calibrate(): RobotParamets {
 
     while (true) {
         if (input.buttonIsPressed(Button.A)) {
+            control.runInBackground(() => music.playTone(200, 100))
+            basic.showIcon(IconNames.Tortoise)
             startTime = control.millis()
             PCAmotor.StepperStart(PCAmotor.Steppers.STPM1)
             PCAmotor.StepperStart(PCAmotor.Steppers.STPM2)
@@ -98,6 +131,8 @@ function calibrate(): RobotParamets {
 
     while (true) {
         if (input.buttonIsPressed(Button.B)) {
+            control.runInBackground(() => music.playTone(400, 100))
+            basic.showIcon(IconNames.Yes)
             entireTime = control.millis() - startTime
             PCAmotor.StepperStop(PCAmotor.Steppers.STPM1)
             PCAmotor.StepperStop(PCAmotor.Steppers.STPM2)
@@ -105,12 +140,17 @@ function calibrate(): RobotParamets {
         }
     }
 
+    entireTime /= 1000
+
     const linearSpeed: number = 1 / entireTime
 
     console.log(`Linear speed has been calibrated to: ${linearSpeed}.`)
 
-    console.log("Next up is the anglelar velocity calibration,")
-    console.log("The discipline will consist of one wheel rotating 360 degrees,")
+    basic.pause(1000)
+    basic.clearScreen()
+
+    console.log("Next up is the track width calibration,")
+    console.log("The discipline will consist of the robot rotating 5 times around 1 wheel,")
     console.log("You shall press the button A to start the rotation,")
     console.log("And press button B to end the test.")
     console.log("Press A to start ...")
@@ -120,6 +160,8 @@ function calibrate(): RobotParamets {
 
     while (true) {
         if (input.buttonIsPressed(Button.A)) {
+            control.runInBackground(() => music.playTone(200, 100))
+            basic.showIcon(IconNames.Tortoise)
             startTimeRotation = control.millis()
             PCAmotor.StepperStart(PCAmotor.Steppers.STPM1)
             break
@@ -128,20 +170,26 @@ function calibrate(): RobotParamets {
 
     while (true) {
         if (input.buttonIsPressed(Button.B)) {
+            basic.showIcon(IconNames.Yes)
+            control.runInBackground(() => music.playTone(400, 100))
             entireTimeRotation = control.millis() - startTimeRotation
             PCAmotor.StepperStop(PCAmotor.Steppers.STPM1)
             break
         }
     }
 
-    const anglelarSpeed: number = 2*Math.PI / entireTimeRotation
+    entireTimeRotation /= 1000
+    // the track width is already diveded by 2
 
-    const wheelRadius: number = linearSpeed / anglelarSpeed
+    const trackWidth: number = (linearSpeed * entireTimeRotation) / (5 * Math.PI)
+
+    flashstorage.put("trackWidth", `${trackWidth}`)
+    flashstorage.put("linearSpeed", `${linearSpeed}`)
+
+    basic.clearScreen()
 
     return {
-        trackWidth: 71,
-        wheelRadius: wheelRadius,
-        angelarSpeed: anglelarSpeed,
+        trackWidth: trackWidth,
         periodTime: 250,
         arcToleration: 1,
         linearSpeed: linearSpeed

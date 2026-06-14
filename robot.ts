@@ -273,8 +273,8 @@ class Robot {
             clockWise: false
         };
 
-        let deltaA = (arcAngle * (arcRad + this.parameters.trackWidth)) / this.parameters.wheelRadius
-        let deltaB = (arcAngle * (arcRad - this.parameters.trackWidth)) / this.parameters.wheelRadius
+        let deltaA = (arcAngle * (arcRad + this.parameters.trackWidth))
+        let deltaB = (arcAngle * (arcRad - this.parameters.trackWidth))
 
         oneResult.absoluteTime = ((arcAngle * (arcRad + this.parameters.trackWidth)) / this.parameters.linearSpeed)
         if (oneResult.absoluteTime < 0) {

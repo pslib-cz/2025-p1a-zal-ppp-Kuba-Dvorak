@@ -95,6 +95,8 @@ function calibrate(): RobotParamets {
         if (input.logoIsPressed()) {
             console.log("Default setting chosen")
             basic.showIcon(IconNames.No)
+            basic.pause(750)
+            basic.clearScreen()
             return {
                 trackWidth: 71,
                 periodTime: 250,

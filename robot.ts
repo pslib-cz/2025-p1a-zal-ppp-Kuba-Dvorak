@@ -9,6 +9,7 @@ class Robot {
     runningOperation: boolean
     myParser: Parser
     parserInfo: ParserInfo
+    operating: boolean
 
     constructor(params: RobotParamets, parserSettings: ParserInfo, inputedString: string, motorInfo: MotorInformation) {
         this.parameters = params
@@ -21,6 +22,7 @@ class Robot {
         this.parserInfo = parserSettings
         this.motorInfo = motorInfo
         this.myParser = new Parser(inputedString)
+        this.operating = true
     }
 
     operateOperations(): void {
@@ -39,14 +41,23 @@ class Robot {
                 this.readComplexInstr(nextInstr)
                 if (nextInstr.instrSet === InstructionSet.end) {
                     console.log(`The parser enden`)
+                    this.operating = false
+                    control.runInBackground(() => music.playTone(200, 500))
+                    basic.showIcon(IconNames.Meh)
                     return
                 }
                 if (nextInstr.instrSet === InstructionSet.stop) {
                     console.log(`The gcode ended, the print is done`)
+                    this.operating = false
+                    control.runInBackground(() => music.playTone(400, 500))
+                    basic.showIcon(IconNames.Happy)
                     return
                 }
                 if (nextInstr.instrSet === InstructionSet.error) {
                     console.log(`The gcode has an error inside`)
+                    this.operating = false
+                    basic.showIcon(IconNames.Sad)
+                    control.runInBackground(() => music.playTone(600, 500))
                     return
                 }
             }
@@ -158,8 +169,8 @@ class Robot {
         }
 
         else {
-            let arcAngle: number = -Math.atan2((newPos.y - centrePos.y), (newPos.x - centrePos.x))
-            arcAngle += Math.atan2((this.information.position.y - centrePos.y), (this.information.position.x - centrePos.x))
+            let arcAngle: number = Math.atan2((newPos.y - centrePos.y), (newPos.x - centrePos.x))
+            arcAngle -= Math.atan2((this.information.position.y - centrePos.y), (this.information.position.x - centrePos.x))
             if (arcAngle > Math.PI) {
                 arcAngle = -(Math.PI * 2 - arcAngle)
             }
@@ -277,6 +288,7 @@ class Robot {
         let deltaB = (arcAngle * (arcRad - this.parameters.trackWidth))
 
         oneResult.absoluteTime = ((arcAngle * (arcRad + this.parameters.trackWidth)) / this.parameters.linearSpeed)
+
         if (oneResult.absoluteTime < 0) {
             oneResult.absoluteTime *= -1
         }
@@ -308,6 +320,7 @@ class Robot {
         if (arcAngle < 0) {
             oneResult.direction.wheelLeft = !oneResult.direction.wheelLeft
             oneResult.direction.wheelRight = !oneResult.direction.wheelRight
+            oneResult.clockWise = !oneResult.clockWise
         }
 
         return oneResult
